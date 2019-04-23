@@ -33,6 +33,8 @@ class HellaCacheArbiter(n: Int)(implicit p: Parameters) extends Module
         io.mem.req.bits.addr := req.bits.addr
         io.mem.req.bits.phys := req.bits.phys
         io.mem.req.bits.tag := Cat(req.bits.tag, UInt(i, log2Up(n)))
+        io.mem.req.bits.dc_bypass := req.bits.dc_bypass
+        io.mem.req.bits.load_retry := req.bits.load_retry
         s1_id := UInt(i)
       }
       def connect_s1() = {

@@ -103,6 +103,8 @@ trait HasCoreData extends HasCoreParameters {
 
 class HellaCacheReqInternal(implicit p: Parameters) extends CoreBundle()(p) with HasCoreMemOp {
   val phys = Bool()
+  val dc_bypass = Bool()
+  val load_retry = Bool()
 }
 
 class HellaCacheReq(implicit p: Parameters) extends HellaCacheReqInternal()(p) with HasCoreData
@@ -231,13 +233,15 @@ trait HasHellaCacheModule {
 class L1Metadata(implicit p: Parameters) extends L1HellaCacheBundle()(p) {
   val coh = new ClientMetadata
   val tag = UInt(width = tagBits)
+  val s_valid = Bool()
 }
 
 object L1Metadata {
-  def apply(tag: Bits, coh: ClientMetadata)(implicit p: Parameters) = {
+  def apply(tag: Bits, coh: ClientMetadata, s_valid: Bool = false.B)(implicit p: Parameters) = {
     val meta = Wire(new L1Metadata)
     meta.tag := tag
     meta.coh := coh
+    meta.s_valid := s_valid
     meta
   }
 }
