@@ -77,6 +77,16 @@ class DCacheModule(outer: DCache) extends HellaCacheModule(outer) {
   val metaArb = Module(new Arbiter(new DCacheMetadataReq, 8))
   val tag_array = SeqMem(nSets, Vec(nWays, UInt(width = tECC.width(metaArb.io.out.bits.data.getWidth))))
 
+  // used for dump meta data
+  val dump_meta_uncorrected = Wire(Vec(nSets, Vec(nWays, new L1Metadata)))
+  
+  for (i <- 0 until nSets)
+  {
+      dump_meta_uncorrected(i) := tag_array.read(i, true).map(tECC.decode(_).uncorrected.asTypeOf(new L1Metadata))
+  }
+
+  dontTouch(dump_meta_uncorrected)
+
   // data
   val data = Module(new DCacheDataArray)
   val dataArb = Module(new Arbiter(new DCacheDataReq, 4))
