@@ -307,6 +307,11 @@ class DCacheModule(outer: DCache) extends HellaCacheModule(outer) {
   metaArb.io.in(2).bits.data.tag := s2_req.addr >> untagBits
   metaArb.io.in(2).bits.data.s_valid := false.B
 
+  when(s2_victimize && !s2_victim_dirty && s2_req.uop_in_branch)
+  {
+    printf("%x\n", s2_req.pc)
+  }
+
   // load reservations and TL error reporting
   val s2_lr = Bool(usingAtomics && !usingDataScratchpad) && s2_req.cmd === M_XLR
   val s2_sc = Bool(usingAtomics && !usingDataScratchpad) && s2_req.cmd === M_XSC

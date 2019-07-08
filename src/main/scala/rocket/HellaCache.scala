@@ -105,6 +105,8 @@ class HellaCacheReqInternal(implicit p: Parameters) extends CoreBundle()(p) with
   val phys = Bool()
   val dc_bypass = Bool()
   val load_retry = Bool()
+  val uop_in_branch = Bool()
+  val pc = UInt(width = coreMaxAddrBits)
 }
 
 class HellaCacheReq(implicit p: Parameters) extends HellaCacheReqInternal()(p) with HasCoreData
